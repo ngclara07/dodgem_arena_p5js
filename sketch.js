@@ -4029,9 +4029,11 @@ class Car {
       this.body.speed;
 
 
+    // Generate visible tyre marks once the vehicle has begun
+    // moving at a meaningful speed.
     if (
-      speed > 0.55 &&
-      frameCount % 3 === 0
+      speed > 0.35 &&
+      frameCount % 2 === 0
     ) {
 
       const forward =
@@ -4042,8 +4044,10 @@ class Car {
         this.getRightVector();
 
 
+      // Approximate the position of the rear axle.
       const rearDistance = 31;
 
+      // Approximate lateral position of each rear wheel.
       const wheelOffset = 18;
 
 
@@ -4059,13 +4063,15 @@ class Car {
         rearDistance;
 
 
+      // Restore stronger visibility while retaining the
+      // Phase 3 dual-wheel design.
       const trailSize =
         map(
           speed,
           0,
           PLAYER_MAX_FORWARD_SPEED,
-          4,
-          9,
+          6,
+          12,
           true
         );
 
@@ -4075,8 +4081,8 @@ class Car {
           speed,
           0,
           PLAYER_MAX_FORWARD_SPEED,
-          70,
-          185,
+          150,
+          235,
           true
         );
 
@@ -4124,7 +4130,7 @@ class Car {
     }
 
 
-    // Fade trail points.
+    // Fade existing tyre marks.
     for (
       let i =
         this.trail.length - 1;
@@ -4135,7 +4141,7 @@ class Car {
     ) {
 
       this.trail[i].life -=
-        2.5;
+        2.0;
 
 
       if (
@@ -4150,8 +4156,8 @@ class Car {
     }
 
 
-    // Bound trail memory usage.
-    const maxTrailPoints = 180;
+    // Prevent indefinite trail growth.
+    const maxTrailPoints = 240;
 
 
     if (
@@ -4182,9 +4188,9 @@ class Car {
     ) {
 
       fill(
-        45,
-        48,
-        52,
+        38,
+        40,
+        44,
         point.life
       );
 
@@ -4193,7 +4199,7 @@ class Car {
         point.x,
         point.y,
         point.size,
-        point.size * 1.35
+        point.size * 1.45
       );
     }
 
