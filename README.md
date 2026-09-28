@@ -9,7 +9,7 @@ An experimental browser-based dodgem-car simulation built with **p5.js**, **Matt
 
 ## Live Demo
 
-**Play Dodgem Arena:** [Launch the live simulation](https://github.com/ngclara07/dodgem_arena_p5js.git)
+**Play Dodgem Arena:** [Launch the live simulation](https://ngclara07.github.io/dodgem_arena_p5js/)
 
 > **Controls:** Arrow keys to drive · `I` to insert · `R` to restart · `P` to pause
 
