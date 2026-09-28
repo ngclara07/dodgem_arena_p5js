@@ -2704,7 +2704,15 @@ function drawBarrierPulses() {
 
 
 // ============================================================
-// 48. ROBUST ENTER-KEY DETECTION
+// 48. ROBUST KEY DETECTION
+// ============================================================
+//
+// Keyboard events can expose special keys differently across
+// browsers/environments.
+//
+// ENTER and ESC therefore use small helper functions rather
+// than depending upon only one representation.
+//
 // ============================================================
 
 function isEnterKey() {
@@ -2713,6 +2721,17 @@ function isEnterKey() {
     keyCode === ENTER ||
     key === "Enter" ||
     key === "Return"
+  );
+}
+
+
+function isEscapeKey() {
+
+  return (
+    keyCode === ESCAPE ||
+    keyCode === 27 ||
+    key === "Escape" ||
+    key === "Esc"
   );
 }
 
@@ -2831,6 +2850,8 @@ function keyPressed() {
         MODE_PRACTICE
       );
 
+      return false;
+
     } else if (
       key === "2"
     ) {
@@ -2838,6 +2859,8 @@ function keyPressed() {
       startGameMode(
         MODE_RANDOM
       );
+
+      return false;
 
     } else if (
       key === "3"
@@ -2847,12 +2870,16 @@ function keyPressed() {
         MODE_ADVANCED
       );
 
+      return false;
+
     } else if (
-      keyCode === ESCAPE
+      isEscapeKey()
     ) {
 
       gameState =
         STATE_START;
+
+      return false;
     }
 
 
@@ -2869,11 +2896,13 @@ function keyPressed() {
   ) {
 
     if (
-      keyCode === ESCAPE
+      isEscapeKey()
     ) {
 
       gameState =
         STATE_MODE_SELECT;
+
+      return false;
     }
 
 
@@ -2892,10 +2921,12 @@ function keyPressed() {
     if (
       key === "p" ||
       key === "P" ||
-      keyCode === ESCAPE
+      isEscapeKey()
     ) {
 
       resumeGame();
+
+      return false;
     }
 
 
@@ -2915,12 +2946,12 @@ function keyPressed() {
     if (
       key === "p" ||
       key === "P" ||
-      keyCode === ESCAPE
+      isEscapeKey()
     ) {
 
       pauseGame();
 
-      return;
+      return false;
     }
 
 
@@ -2932,7 +2963,7 @@ function keyPressed() {
 
       restartCurrentMode();
 
-      return;
+      return false;
     }
 
 
@@ -2945,7 +2976,7 @@ function keyPressed() {
       insertionArmed =
         true;
 
-      return;
+      return false;
     }
 
 
@@ -2958,6 +2989,8 @@ function keyPressed() {
         MODE_PRACTICE
       );
 
+      return false;
+
     } else if (
       key === "2"
     ) {
@@ -2966,6 +2999,8 @@ function keyPressed() {
         MODE_RANDOM
       );
 
+      return false;
+
     } else if (
       key === "3"
     ) {
@@ -2973,6 +3008,8 @@ function keyPressed() {
       startGameMode(
         MODE_ADVANCED
       );
+
+      return false;
     }
   }
 }
@@ -2980,10 +3017,14 @@ function keyPressed() {
 
 
 // ============================================================
-// 51. ENTER-KEY FALLBACK
+// 51. ENTER / ESC KEY FALLBACK
 // ============================================================
 
 function keyReleased() {
+
+  // ----------------------------------------------------------
+  // ENTER FALLBACK
+  // ----------------------------------------------------------
 
   if (
     gameState === STATE_START &&
@@ -2998,6 +3039,61 @@ function keyReleased() {
 
 
     return false;
+  }
+
+
+  // ----------------------------------------------------------
+  // ESC FALLBACK
+  // ----------------------------------------------------------
+
+  if (
+    isEscapeKey()
+  ) {
+
+    // Mode selection -> Start screen.
+    if (
+      gameState === STATE_MODE_SELECT
+    ) {
+
+      gameState =
+        STATE_START;
+
+      return false;
+    }
+
+
+    // Countdown -> Mode selection.
+    if (
+      gameState === STATE_COUNTDOWN
+    ) {
+
+      gameState =
+        STATE_MODE_SELECT;
+
+      return false;
+    }
+
+
+    // Playing -> Paused.
+    if (
+      gameState === STATE_PLAYING
+    ) {
+
+      pauseGame();
+
+      return false;
+    }
+
+
+    // Paused -> Playing.
+    if (
+      gameState === STATE_PAUSED
+    ) {
+
+      resumeGame();
+
+      return false;
+    }
   }
 }
 
